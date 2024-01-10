@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
+    <!-- sbb CSS -->
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"
+            integrity="sha512-jGR1T3dQerLCSm/IGEGbndPwzszJBlKQ5Br9vuB0Pw2iyxOy+7AK+lJcCC8eaXyz/9du+bkCy4HXxByhxkHf+w=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <title>Hello, sbb!</title>
+</head>
+<body>
+<th:block layout:fragment="content"></th:block>
+</body>
+<script th:inline="javascript">
+    function recommendArticle() {
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+
+        $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: "/article/vote",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(header, token);
+            },
+            data: JSON.stringify({ vote: 1 }),
+            success: function (data) {
+                var currentCount = parseInt($("#recommend_article_count").text());
+                $("#recommend_article_count").text(currentCount + 1);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+</script>
+</html>
